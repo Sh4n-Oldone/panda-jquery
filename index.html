@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pavlov & Panda x jQuery</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="./index.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Pavlov's test for CrazyPanda</h1>
+  </header>
+  <main>
+    <fieldset>
+      <legend>Select:</legend>
+      <button>color</button>
+      <button>backgroundColor</button>
+    </fieldset>
+    <section class="demo-box">
+      <div class="slider-box">
+        
+      </div>
+      <div class="customizable-box">
+        
+      </div>
+    </section>
+  </main>
+  <footer></footer>
+
+  <script>
+    $("document").ready(function(){
+
+      var contentWidth = "90%"
+      var theColor = "";
+      var isColorButtonActive = true;
+
+      function backgroundButtonActive(){
+        isColorButtonActive = false; 
+        console.log("background button clicked")
+        console.log(isColorButtonActive)
+      };
+      function colorButtonActive(){ 
+        isColorButtonActive = true;
+        console.log("color button clicked")
+        console.log(isColorButtonActive)
+      };
+
+      $("body").css({
+        "max-width": "900px",
+        "display": "flex",
+        "align-items": "center",
+        "flex-direction": "column",
+        "margin": "0 auto"
+      });
+      $("header").css({
+        "margin-top": "20px",
+        "margin-bottom": "15px"
+      });
+      $("header h1").css({
+        "margin": "0"
+      });
+
+      $(".customizable-box").append("<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Debitis enim dicta vel minima consequatur, eaque ea deleniti officiis temporibus tempore, aspernatur, unde fugiat expedita a est laudantium sed quisquam quasi!</p>").css({
+        "display": "flex",
+        "justify-content": "center",
+        "align-items": "center"
+      });
+      $(".customizable-box p").css({
+        "width": contentWidth,
+        "border": "1px solid #000",
+        "padding": "5px"
+      });
+      $(".slider-box").append(`<div id="coloredSlider"></div>`);
+
+      $("fieldset").css({
+        "margin": "0",
+        "padding": "10px 20px"
+      });
+      $("fieldset legend").css({
+        "font-size": "18px",
+        "font-weight": "300"
+      });
+
+      $("fieldset button").css({
+        "padding": "6px 12px",
+        "font-size": "15px"
+      });
+      $("fieldset button:first").css("margin-right", "15px");
+      if(isColorButtonActive){
+        $("fieldset button:first").addClass("button__active");
+      };
+
+      $(".demo-box").css({
+        "display": "grid",
+        "grid-template-columns": "repeat(2, 1fr)"
+      });
+      $(".slider-box").css({
+        "display": "flex",
+        "justify-content": "center",
+        "align-items": "center"
+      });
+
+      $("footer").append("<small>Why are we still here? Just to suffer?</small>").css({
+        "margin-top": "20px"
+      });
+
+      $("#coloredSlider").css({
+        "float": "left",
+	      "clear": "left",
+        "width": contentWidth
+      });
+      $("#coloredSlider .ui-slider-range").css("background", "#ff0000");
+      $("#coloredSlider .ui-state-default, .ui-widget-content .ui-state-default").css({
+        "background": "none",
+	      "background-color": "#fff"
+      });
+
+      function getTheColor( colorVal ) {
+      	if ( colorVal < 50 ) {
+    			myRed = 255;
+    			myGreen = parseInt( ( ( colorVal * 2 ) * 255 ) / 100 );
+    		}
+    	  else 	{
+    			myRed = parseInt( ( ( 100 - colorVal ) * 2 ) * 255 / 100 );
+    			myGreen = 255;
+    		}
+    	  theColor = "rgb(" + myRed + "," + myGreen + ",0)"; 
+        if (isColorButtonActive) {
+          $(".customizable-box p").css("color", theColor)
+        }
+        if (!isColorButtonActive) {
+          $(".customizable-box p").css("background-color", theColor)
+        }
+      	return( theColor ); 
+      }
+
+      function refreshSwatch() {
+      	var coloredSlider = $( "#coloredSlider" ).slider( "value" );
+      	myColor = getTheColor( coloredSlider );
+      
+      	$( "#coloredSlider .ui-slider-range" ).css( "background-color", myColor );
+      
+      	$( "#coloredSlider .ui-state-default, .ui-widget-content .ui-state-default" ).css( "background-color", myColor );
+      }
+      
+      $(function() {
+      	$( "#coloredSlider" ).slider({
+      	  orientation: "horizontal",
+      	  range: "min",
+      	  max: 100,
+      	  value: 0,
+      	  slide: refreshSwatch,
+      	  change: refreshSwatch
+      	});
+      });
+
+      function toggleButton() {
+        if(isColorButtonActive){
+          $("fieldset button:first").addClass("button__active");
+          $("fieldset button:last").removeClass("button__active");
+        }
+
+        if(!isColorButtonActive){
+          $("fieldset button:last").addClass("button__active");
+          $("fieldset button:first").removeClass("button__active");
+        }
+      }
+
+      $("fieldset button:first").click(function(){
+        colorButtonActive(); 
+        toggleButton();
+      });
+      $("fieldset button:last").click(function(){
+        backgroundButtonActive(); 
+        toggleButton();
+      });
+    });
+  </script>
+</body>
+</html>
